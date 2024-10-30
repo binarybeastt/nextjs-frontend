@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000', // Replace with your FastAPI server URL
+  baseURL: 'https://fast-backend-n.onrender.com', // Replace with your FastAPI server URL
   headers: {
     'Content-Type': 'application/json',
   },
