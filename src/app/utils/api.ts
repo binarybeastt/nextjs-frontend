@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000', // Set this to your FastAPI backend URL
+  baseURL: 'https://fast-backend-n.onrender.com', // Set this to your FastAPI backend URL
 });
 
 export const registerUser = async (username: string, email: string, password: string) => {
@@ -14,7 +14,8 @@ export const registerUser = async (username: string, email: string, password: st
       password,
     });
     return response.data;
-  } catch (error) {
+  } catch (error:any) {
+    console.error("Error during registration:", error.response?.data);
     throw error;
   }
 };

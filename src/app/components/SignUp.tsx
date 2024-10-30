@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +23,7 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       const response = await axiosInstance.post("/auth/register", {
-        userName,
+        username,
         email,
         password,
       });
@@ -36,7 +36,6 @@ export default function Register() {
       setError("Registration failed. Please try again.");
     }
   };
-
   return (
     <div>
       <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border">
@@ -62,8 +61,8 @@ export default function Register() {
             <label htmlFor="" className="text-[#8392A7]">Full Name*</label>
             <input 
             type="text" 
-            value={userName} 
-            onChange={(e) => setUserName(e.target.value)}  
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)}  
             placeholder="Deji Olawuni" 
             className={`border ${
                 error ? "border-red-600" : "border"
@@ -112,17 +111,15 @@ export default function Register() {
             <label htmlFor="">Confirm Password*</label>
             <input type="text"  placeholder="*******" className="border py-2 rounded-[10px] px-2"/>
           </div> */}
+          </form>
           <button
             type="submit"
             className="text-white bg-[#3056EC] px-5 py-2 rounded-[10px] mt-5"
             onClick={handleSubmit}
-            //   onClick={handleSignUp}
-            // disabled={loading}
           >
             {/* sign up */}
             {loading ? "Signing up..." : "Sign Up"}
           </button>
-          </form>
 
           <div className="flex items-center gap-x-1 mt-5 pb-5">
             <Link
