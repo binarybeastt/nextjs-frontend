@@ -1,55 +1,30 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import axiosInstance from '../utils/axiosInstance';
+"use client";
+import React from "react";
+// import Signup from "../components/SignUp";
+import Login from '@/app/components/Login'
+// import {useState} from 'react'
+// import { FcGoogle } from "react-icons/fc";
+// import Link from 'next/link'
+// import {useCreateUserWithEmailAndPassword} from 'react-firebase-hooks/auth'
+// import auth from '@/app/firebase/config'
+// import {useRouter} from 'next/navigation'
 
-export default function Login() {
-  const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+// type Props = {};
 
-  const handleLogin = async () => {
-    try {
-      const response = await axiosInstance.post('/auth/login', {
-        username,
-        password,
-      });
-      
-      // Store the access token in localStorage
-      localStorage.setItem('access_token', response.data.access_token);
-      
-      router.push('/home'); // Navigate to the homepage on successful login
-    } catch (err) {
-      console.error('Error during login:', err);
-      setError('Login failed. Please check your credentials.');
-    }
-  };
-
+const LogIn = () => {
   return (
-    <div>
-      <h1>Login</h1>
-      {error && <p>{error}</p>}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="px-4 py-4 sm:pb-32 sm:px-0 mt-10 sm:mt-0  sm:bg-[#E9F9FF] relative">
+      <p className="border-2 sm:bg-white sm:border sm:mx-auto sm:my-10 rounded-[10px] sm:py-0 sm:w-[70%] px-5 font-bold text-[30px] capitalize">
+        deji___ <br />
+        school
+      </p>
+      <div className="sm:absolute sm:left-48 sm:pb-10">
+        <Login/>
+      </div>
     </div>
   );
-}
+};
+
+export default LogIn;
+
+
