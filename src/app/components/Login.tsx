@@ -11,14 +11,17 @@ const LogIn = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false)
 
-  const handleLoginButton = (e:any) => {
+  const handleLoginButton = (e:React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     handleLogin()
   }
 
 
   const handleLogin = async () => {
+    setLoading(true)
+    setError("")
         try {
           const response = await axiosInstance.post('/auth/login', {
             username,
@@ -32,6 +35,9 @@ const LogIn = () => {
         } catch (err) {
           console.error('Error during login:', err);
           setError('Login failed. Please check your credentials.');
+        }
+        finally{
+          setLoading(false)
         }
       };
       
@@ -101,8 +107,7 @@ const LogIn = () => {
           onClick={handleLoginButton}
           // disabled={loading}
         >
-          Log In
-          {/* {loading ? "Logging in..." : "Log In"} */}
+          {loading ? "Logging in..." : "Log In"}
         </button>
 
         <div className="flex items-center gap-x-1 mt-5 pb-5">

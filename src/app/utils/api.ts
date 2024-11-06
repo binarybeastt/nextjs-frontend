@@ -14,8 +14,12 @@ export const registerUser = async (username: string, email: string, password: st
       password,
     });
     return response.data;
-  } catch (error:any) {
-    console.error("Error during registration:", error.response?.data);
+  } catch (error:unknown) {
+    if(axios.isAxiosError(error)){
+      console.error("Error during registration:", error.response?.data);
+    }else {
+      console.error("An unexpected error occurred:", error);
+    }
     throw error;
   }
 };

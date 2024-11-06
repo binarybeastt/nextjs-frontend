@@ -39,7 +39,7 @@ const Home = () => {
     if (!token) {
       router.push('/Login'); // Redirect to login if no token is found
     }
-  }, []);
+  }, [router]);
   // file uploading 
   const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files?.[0] || null);

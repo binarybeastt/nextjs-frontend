@@ -13,14 +13,16 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e:React.MouseEvent<HTMLButtonElement> ) => {
     e.preventDefault();
     handleRegister();
   };
 
   const handleRegister = async () => {
+    setLoading(true)
+    setError("")
     try {
       const response = await axiosInstance.post("/auth/register", {
         username,
@@ -29,11 +31,14 @@ export default function Register() {
       });
       console.log("Registration successful:", response.data);
       if(response) {
-          router.push("/login");
+          router.push("/Login");
       }
     } catch (err) {
       console.error("Error during registration:", err);
       setError("Registration failed. Please try again.");
+    }
+    finally{
+      setLoading(false)
     }
   };
   return (
