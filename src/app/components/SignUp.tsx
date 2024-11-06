@@ -31,7 +31,7 @@ export default function Register() {
       });
       console.log("Registration successful:", response.data);
       if(response) {
-          router.push("/Login");
+          router.push("/login");
       }
     } catch (err) {
       console.error("Error during registration:", err);
@@ -128,7 +128,7 @@ export default function Register() {
 
           <div className="flex items-center gap-x-1 mt-5 pb-5">
             <Link
-              href="/Login"
+              href="/login"
               className="underline text-[#8392A7] font-bold hover:text-[#2F80ED]"
             >
               Login
