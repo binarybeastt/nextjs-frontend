@@ -29,7 +29,7 @@ export default function Register() {
       });
       console.log("Registration successful:", response.data);
       if(response) {
-          router.push("/Login");
+          router.push("/login");
       }
     } catch (err) {
       console.error("Error during registration:", err);

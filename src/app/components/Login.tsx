@@ -34,9 +34,7 @@ const LogIn = () => {
           setError('Login failed. Please check your credentials.');
         }
       };
-
-
-
+      
   return (
     <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border">
       <div className="sm:mx-10 w-[100%] sm:w-[80%]">
@@ -114,7 +112,7 @@ const LogIn = () => {
           >
             sign up
           </Link>
-          <p className="text-[#8392A7]">if you already have an account</p>
+          <p className="text-[#8392A7]">if you dont have an account</p>
         </div>
       </div>
     </div>
