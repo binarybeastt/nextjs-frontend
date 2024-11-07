@@ -6,16 +6,17 @@ import { FaLinkedin } from "react-icons/fa";
 import { CiChat1 } from "react-icons/ci";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useRouter } from 'next/navigation';
-import Screen1 from '@/app/components/screens/Screen1'
-
+import { useRouter } from "next/navigation";
+import Screen1 from "@/app/components/screens/Screen1";
+import Screen2 from "@/app/components/screens/Screen2";
+import Screen3 from "@/app/components/screens/Screen3";
+import Screen4 from "@/app/components/screens/Screen4";
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState<
-  "screen1" | "screen2" | "screen3" | "screen4"
+    "screen1" | "screen2" | "screen3" | "screen4"
   >("screen1");
   const [openMenu, setOpenMenu] = useState<boolean>(false);
-  
 
   const handleHamburgerMenu = () => {
     setOpenMenu(!openMenu);
@@ -28,20 +29,15 @@ const Home = () => {
     setCurrentPage(screen);
     setOpenMenu(!openMenu);
   };
-  
+
   const router = useRouter();
   useEffect(() => {
     // Check if user is logged in by verifying token presence
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (!token) {
-      router.push('/Login'); // Redirect to login if no token is found
+      router.push("/Login"); // Redirect to login if no token is found
     }
   }, [router]);
- 
-
-  // useEffect(() => {
-  //   console.log('openMenu state changed:', openMenu);
-  // }, [openMenu]);
 
   return (
     <>
@@ -74,7 +70,9 @@ const Home = () => {
                       onClick={() => {
                         handleScreenChange("screen1");
                       }}
-                      className=" capitalize"
+                      className={`capitalize ${
+                        currentPage === "screen1" ? "font-serif" : "font-normal"
+                      } `}
                     >
                       interview prep
                     </p>
@@ -85,20 +83,36 @@ const Home = () => {
                       onClick={() => {
                         handleScreenChange("screen2");
                       }}
-                      className=" capitalize"
+                      className={`capitalize ${
+                        currentPage === "screen1" ? "font-serif" : "font-normal"
+                      } `}
                     >
                       linkedIn profile review
                     </p>
                   </div>
                   <div className="flex items-center gap-x-5">
                     <BsFileEarmarkText />
-                    <p onClick={() => {}} className="capitalize">
+                    <p
+                      onClick={() => {
+                        handleScreenChange("screen3");
+                      }}
+                      className={`capitalize ${
+                        currentPage === "screen1" ? "font-serif" : "font-normal"
+                      } `}
+                    >
                       cv/resume review
                     </p>
                   </div>
                   <div className="flex items-center gap-x-5 ">
                     <CiChat1 />
-                    <p onClick={() => {}} className="capitalize">
+                    <p
+                      onClick={() => {
+                        handleScreenChange("screen4");
+                      }}
+                      className={`capitalize ${
+                        currentPage === "screen1" ? "font-serif" : "font-normal"
+                      } `}
+                    >
                       career advisor chat
                     </p>
                   </div>
@@ -120,7 +134,9 @@ const Home = () => {
                     onClick={() => {
                       handleScreenChange("screen1");
                     }}
-                    className=" capitalize cursor-pointer"
+                    className={`capitalize cursor-pointer ${
+                      currentPage === "screen1" ? "font-serif" : "font-normal"
+                    }`}
                   >
                     interview prep
                   </p>
@@ -131,20 +147,36 @@ const Home = () => {
                     onClick={() => {
                       handleScreenChange("screen2");
                     }}
-                    className=" capitalize cursor-pointer"
+                    className={`capitalize cursor-pointer ${
+                      currentPage === "screen2" ? "font-serif" : "font-normal"
+                    }`}
                   >
                     linkedIn profile review
                   </p>
                 </div>
                 <div className="flex items-center gap-x-5">
                   <BsFileEarmarkText />
-                  <p onClick={() => {}} className="capitalize cursor-pointer">
+                  <p
+                    onClick={() => {
+                      handleScreenChange("screen3");
+                    }}
+                    className={`capitalize cursor-pointer ${
+                      currentPage === "screen3" ? "font-serif" : "font-normal"
+                    }`}
+                  >
                     cv/resume review
                   </p>
                 </div>
                 <div className="flex items-center gap-x-5 ">
                   <CiChat1 />
-                  <p onClick={() => {}} className="capitalize cursor-pointer">
+                  <p
+                    onClick={() => {
+                      handleScreenChange("screen4");
+                    }}
+                    className={`capitalize cursor-pointer ${
+                      currentPage === "screen4" ? "font-serif" : "font-normal"
+                    }`}
+                  >
                     career advisor chat
                   </p>
                 </div>
@@ -152,16 +184,15 @@ const Home = () => {
             </div>
           </div>
           {/* right side */}
+
           {/* screen 1 */}
-          {currentPage === "screen1" && (
-            <Screen1/>
-          )}
+          {currentPage === "screen1" && <Screen1 />}
           {/* screen 2 */}
-          {currentPage === "screen2" && (
-            <div className="border-dashed border">
-              <p>yo</p>
-            </div>
-          )}
+          {currentPage === "screen2" && <Screen2 />}
+          {/* screen 3 */}
+          {currentPage === "screen3" && <Screen3 />}
+          {/* screen 4 */}
+          {currentPage === "screen4" && <Screen4 />}
         </div>
       </div>
     </>

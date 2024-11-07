@@ -69,10 +69,11 @@ const Screen1 = () => {
           interview.
         </p>
         <form
-          className="flex flex-col gap-y-3 mx-5 border-2 p-5 rounded-[10px] "
+          className="flex flex-col gap-y-3  sm:border-2 p-1 sm:p-5 rounded-[10px] w-[100%] "
           onSubmit={handleFile}
         >
-          <p className="text-[25px] font-bold">New Interview Prep</p>
+          <p className="sm:text-[25px] text-[20px] font-bold">New Interview Prep</p>
+          <div className=" border sm:hidden w-auto"></div>
           <div className="flex flex-col gap-y-2 mt-2">
             <label htmlFor="">Job Title</label>
             <input
@@ -83,7 +84,7 @@ const Screen1 = () => {
               placeholder="Enter Job Title"
               className={`border ${
                 error ? "border-red-600" : "border"
-              } text-[18px] py-2 px-3 rounded-[10px]`}
+              } text-[18px] py-2 px-3 rounded-[10px] w-[100%] `}
             />
             {error && (
               <p style={{ color: "red" }}>
@@ -121,7 +122,7 @@ const Screen1 = () => {
             />
           </div>
           {/* file uploading */}
-          <div className="border border-dashed border-[#3056D3] mt-5 rounded-[10px] h-[250px] bg-[#F4F7FF]">
+          <div className="border border-dashed border-[#3056D3] mt-5 rounded-[10px] sm:h-[250px] bg-[#F4F7FF]">
             <div className="border-2 rounded-[50%] mx-auto mt-10 w-[40px] h-[40px] bg-white">
               <RxDownload className="text-[#3056D3] mx-auto my-2" />
             </div>
@@ -147,14 +148,14 @@ const Screen1 = () => {
           <div className="">
             <p>Or paste CV/Resume Text</p>
             <div className="relative mt-3 mx-1 ">
-              <FaRegPenToSquare className="border-none absolute top-[20px] left-[30px] text-[#A0808F]" />
+              <FaRegPenToSquare className="border-none absolute top-[20px] left-[20px] sm:left-[30px] text-[#A0808F]" />
               <textarea
                 name=""
                 id=""
                 value={resume}
                 onChange={(e) => setResume(e.target.value)}
                 placeholder="place CV/Resume"
-                className="border outline-none px-20 py-[15px] rounded-[10px] w-full h-[250px]"
+                className="border outline-none px-12 sm:px-20 py-[15px] rounded-[10px] w-full sm:h-[250px]"
                 required
               ></textarea>
             </div>
