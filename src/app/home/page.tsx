@@ -11,6 +11,7 @@ import Screen1 from "@/app/components/screens/Screen1";
 import Screen2 from "@/app/components/screens/Screen2";
 import Screen3 from "@/app/components/screens/Screen3";
 import Screen4 from "@/app/components/screens/Screen4";
+// import Signup from "@/app/Signup/page"
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState<
@@ -39,10 +40,14 @@ const Home = () => {
     }
   }, [router]);
 
+  const handleLogOut = () => {
+    router.push('/');
+  }
+
   return (
     <>
       <div className="px-4 py-4 sm:px-0 sm:py-0 ">
-        <div className="flex border-2 items-center sm:bg-white sm:border sm:w-[90%] sm:mt-10 sm:mx-auto  sm:py-1 rounded-[10px]  justify-between px-5">
+        <div className="flex border-2 items-center sm:bg-white sm:border sm:w-[90%] sm:mt-20 sm:mx-auto  sm:py-1 rounded-[10px]  justify-between px-5">
           <p className="font-bold text-[30px] capitalize">
             deji___ <br />
             school
@@ -51,7 +56,7 @@ const Home = () => {
             className="sm:hidden text-[30px] cursor-pointer"
             onClick={handleHamburgerMenu}
           />
-          <button className="hidden sm:flex">log out</button>
+          <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold" onClick={handleLogOut} >logout</button>
         </div>
         {/* contsainer div */}
         <div className="flex sm:flex-row flex-col gap-x-2 relative sm:absolute pb-10">

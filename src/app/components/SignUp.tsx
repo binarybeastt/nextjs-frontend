@@ -128,7 +128,7 @@ export default function Register() {
 
           <div className="flex items-center gap-x-1 mt-5 pb-5">
             <Link
-              href="/login"
+              href="/Signin"
               className="underline text-[#8392A7] font-bold hover:text-[#2F80ED]"
             >
               Login
