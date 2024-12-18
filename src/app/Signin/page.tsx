@@ -51,12 +51,12 @@ const Log = () => {
         </div>
       {/* mobile screen sign up component */}
       
-      <div className=" sm:h-[120px] sm:mt-[300px] bg-red-90 hidde relative">
+      {/* <div className=" sm:h-[120px] sm:mt-[300px] bg-red-90 hidde relative">
         <div className="bg-white border-2 w-[25%] px-2 py-5 rounded-[10px] h-fit absolute right-[50px] top-0  bottom-[0px] space-y-2">
           <h4 className="font-bold">signing in ....</h4>
           <p>user successfully signed in</p>
         </div>
-      </div>
+      </div> */}
       
     </div>
   );

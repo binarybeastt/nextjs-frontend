@@ -43,7 +43,7 @@ const Screen3 = () => {
         </p>
         <form
           className="flex flex-col gap-y-3 mx-5 border-2 p-2 sm:p-5 rounded-[10px] "
-          //   onSubmit={handleFile}
+            onSubmit={handleFile}
         >
           <p className="sm:text-[25px] text-[20px] font-bold">Upload CV/Resume</p>
           {/* file uploading */}

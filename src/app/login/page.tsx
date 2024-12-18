@@ -1,10 +1,10 @@
 "use client"
-// import React, { useState } from "react";
-import Link from "next/link";
-// import SignUp from "@/app/components/SignUp";
-import Login from "@/app/components/Login";
-import Modal from '@/app/components/Modal'
 import React from "react";
+import Login from "@/app/components/Login";
+// import React, { useState } from "react";
+// import SignUp from "@/app/components/SignUp";
+// import Modal from '@/app/components/Modal'
+// import Link from "next/link";
 // import Login from '@/app/components/Login'
 // import Signup from "../components/SignUp";
 // import {useState} from 'react'

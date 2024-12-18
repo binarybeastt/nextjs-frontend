@@ -9,7 +9,7 @@ const Screen4 = () => {
         <p className="font-bold text-[20px] mx-4">Career Advisor Chat</p>
         <p className="px-7">
           Unlock Your Career Potential with Notwale, Our AI-Powered Career
-          Advisor. Notwale can assess users's current career situations, offer
+          Advisor. Notwale can assess users\'s current career situations, offer
           recommendations for career paths, suggest relevant education or
           training opportunities, and provide tips for professional growth and
           success.

@@ -27,14 +27,16 @@ const LogIn = () => {
             username,
             password,
           });
-          
           // Store the access token in localStorage
           localStorage.setItem('access_token', response.data.access_token);
-          
           router.push('/home'); // Navigate to the homepage on successful login
+          console.log('Login successful:', response.data);
+          
         } catch (err) {
           console.error('Error during login:', err);
           setError('Login failed. Please check your credentials.');
+          // setUsername('')
+          // setPassword('')
         }
         finally{
           setLoading(false)
@@ -42,7 +44,7 @@ const LogIn = () => {
       };
       
   return (
-    <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border">
+    <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border relative">
       <div className="sm:mx-10 w-[100%] sm:w-[80%]">
         <p className="capitalize font-bold text-[25px] mt-10 mx-1">login</p>
         <a
@@ -120,6 +122,12 @@ const LogIn = () => {
           <p className="text-[#8392A7]">if you dont have an account</p>
         </div>
       </div>
+      {/* <div className=" sm:h-[120px] sm:mt-[300px] bg-red-90 hidde"> */}
+        {/* <div className="bg-white border-2  px-2 py-5 rounded-[10px] h-fit absolute right-[0px] top- bottom-[0px] space-y-2">
+          <h4 className="font-bold">signing in ....</h4>
+          <p>user successfully signed in</p>
+        </div> */}
+      {/* </div> */}
     </div>
   );
 };
