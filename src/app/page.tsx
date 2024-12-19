@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+// import React, { useState } from "react";
 import Link from "next/link";
 import SignUp from "@/app/components/SignUp";
 import Modal from '@/app/components/Modal'
+// import useState from 'react'
 
 const page = () => {
   return (
@@ -37,7 +38,7 @@ const page = () => {
         </div>
         <div className="flex sm:hidden px-5 py-2 mt-10 justify-between pb-20">
           <Link className="text-white bg-[#3056EC] px-5 py-2 rounded-[10px]" href={'Signup'}>sign up</Link>
-          <Link className="text-white bg-[#3056EC] px-5 py-2 rounded-[10px]" href={'Login'}>Log In</Link>
+          <Link className="text-white bg-[#3056EC] px-5 py-2 rounded-[10px]" href={'login'}>Log In</Link>
         </div>
       </div>
     </>

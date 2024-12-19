@@ -1,7 +1,12 @@
-"use client";
+"use client"
 import React from "react";
+import Login from "@/app/components/Login";
+// import React, { useState } from "react";
+// import SignUp from "@/app/components/SignUp";
+// import Modal from '@/app/components/Modal'
+// import Link from "next/link";
+// import Login from '@/app/components/Login'
 // import Signup from "../components/SignUp";
-import Login from '@/app/components/Login'
 // import {useState} from 'react'
 // import { FcGoogle } from "react-icons/fc";
 // import Link from 'next/link'
@@ -21,10 +26,11 @@ const LogIn = () => {
       <div className="sm:absolute sm:left-48 sm:pb-10">
         <Login/>
       </div>
-    </div>
+    </div> 
   );
 };
 
 export default LogIn;
+
 
 

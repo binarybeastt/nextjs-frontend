@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        borderWidth:{'0.5': '0.2px'},
       },
     },
   },

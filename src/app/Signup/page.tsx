@@ -12,7 +12,7 @@ const SignUp = () => {
         deji___ <br />
         school
       </p>
-      <div className="sm:absolute sm:left-48 sm:pb-10">
+      <div className="sm:absolute sm:left-48 sm:pb-20">
         <Signup />
       </div>
     </div>
