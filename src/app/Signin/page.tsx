@@ -5,6 +5,7 @@ import Login from "@/app/components/Login";
 import Modal from "@/app/components/Modal";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 
 const Log = () => {
   const [username, setUsername] = useState<string>("");
@@ -14,14 +15,14 @@ const Log = () => {
   const [showModal, setIsShowModal] = useState(false);
   const router = useRouter();
 
-  useEffect(()=> {
-    if(showModal) {
-     const timer = setTimeout(()=> {
-       setIsShowModal(false)
-      }, 2000)
-      return clearTimeout(timer)
+  useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        setIsShowModal(false);
+      }, 2000);
+      return clearTimeout(timer);
     }
-  },[showModal, loading])
+  }, [showModal, loading]);
 
   const handleLogIn = async () => {
     setLoading(true);
@@ -36,18 +37,20 @@ const Log = () => {
       setIsShowModal(true);
       console.log("Login successful:", response.data);
       router.push("/home"); // Navigate to the homepage on successful login
-    } catch (err: any) {
-      if (err.response) {
-        console.error("Server responded with:", err.response.data);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        // Axios-specific error
+        console.error("Server responded with:", error.response?.data);
         setError(
-          err.response.data.message ||
+          error.response?.data?.message ||
             "Login failed. Please check your credentials."
         );
       } else {
-        console.error("Error during login:", err);
-        setError("Network error. Please try again.");
+        // Non-Axios errors
+        console.error("An unexpected error occurred:", error);
+        setError("An unexpected error occurred. Please try again.");
+        setPassword('')
       }
-      setPassword("");
     } finally {
       setLoading(false);
     }
@@ -117,3 +120,16 @@ const Log = () => {
 };
 
 export default Log;
+// catch (err: unknown) {
+//   if (err.response) {
+//     console.error("Server responded with:", err.response.data);
+//     setError(
+//       err.response.data.message ||
+//         "Login failed. Please check your credentials."
+//     );
+//   } else {
+//     console.error("Error during login:", err);
+//     setError("Network error. Please try again.");
+//   }
+//   setPassword("");
+// } finally {

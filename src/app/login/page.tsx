@@ -3,6 +3,7 @@ import Login from "@/app/components/Login";
 import React, {useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 // type Props = {};
 
@@ -28,18 +29,20 @@ const LogIn = () => {
         // setIsShowModal(true);
         console.log("Login successful:", response.data);
         router.push("/home"); // Navigate to the homepage on successful login
-      } catch (err: any) {
-        if (err.response) {
-          console.error("Server responded with:", err.response.data);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // Axios-specific error
+          console.error("Server responded with:", error.response?.data);
           setError(
-            err.response.data.message ||
+            error.response?.data?.message ||
               "Login failed. Please check your credentials."
           );
         } else {
-          console.error("Error during login:", err);
-          setError("Network error. Please try again.");
+          // Non-Axios errors
+          console.error("An unexpected error occurred:", error);
+          setError("An unexpected error occurred. Please try again.");
+          setPassword('')
         }
-        setPassword("");
       } finally {
         setLoading(false);
       }
