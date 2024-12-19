@@ -1,48 +1,31 @@
 "use client";
-import React from "react"
-import { useState } from 'react';
+import React, { Dispatch, SetStateAction } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import axiosInstance from '../utils/axiosInstance';
-import { useRouter } from "next/navigation";
 
-const LogIn = () => {
-  const router = useRouter();
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false)
+interface SignInProps {
+  handleLogIn: () => Promise<void>;
+  loading: boolean;
+  error: string;
+  password: string;
+  setPassword: Dispatch<SetStateAction<string>>;
+  username: string;
+  setUsername: Dispatch<SetStateAction<string>>;
+}
 
-  const handleLoginButton = (e:React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    handleLogin()
-  }
-
-
-  const handleLogin = async () => {
-    setLoading(true)
-    setError("")
-        try {
-          const response = await axiosInstance.post('/auth/login', {
-            username,
-            password,
-          });
-          // Store the access token in localStorage
-          localStorage.setItem('access_token', response.data.access_token);
-          router.push('/home'); // Navigate to the homepage on successful login
-          console.log('Login successful:', response.data);
-          
-        } catch (err) {
-          console.error('Error during login:', err);
-          setError('Login failed. Please check your credentials.');
-          // setUsername('')
-          // setPassword('')
-        }
-        finally{
-          setLoading(false)
-        }
-      };
-      
+const LogIn: React.FC<SignInProps> = ({
+  handleLogIn,
+  loading,
+  error,
+  username,
+  password,
+  setPassword,
+  setUsername,
+}) => {
+  const handleLoginButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleLogIn();
+  };
   return (
     <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border relative">
       <div className="sm:mx-10 w-[100%] sm:w-[80%]">
@@ -59,7 +42,13 @@ const LogIn = () => {
         <form action="" className="flex flex-col gap-y-5 mt-5">
           <div className="flex flex-col gap-y-2">
             <label htmlFor="">Full Name*</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}  placeholder="Deji Olawuni" className="border py-2 rounded-[10px] px-2"/>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Deji Olawuni"
+              className="border py-2 rounded-[10px] px-2"
+            />
           </div>
           {/* <div className="flex flex-col gap-y-2">
             <label htmlFor="" className="text-[#8392A7]">
@@ -101,7 +90,7 @@ const LogIn = () => {
             <label htmlFor="">Confirm Password*</label>
             <input type="text"  placeholder="*******" className="border py-2 rounded-[10px] px-2"/>
           </div> */}
-           {error && <p className="text-red-600">{error}</p>}
+          {error && <p className="text-red-600">{error}</p>}
         </form>
         <button
           type="submit"
@@ -122,18 +111,11 @@ const LogIn = () => {
           <p className="text-[#8392A7]">if you dont have an account</p>
         </div>
       </div>
-      {/* <div className=" sm:h-[120px] sm:mt-[300px] bg-red-90 hidde"> */}
-        {/* <div className="bg-white border-2  px-2 py-5 rounded-[10px] h-fit absolute right-[0px] top- bottom-[0px] space-y-2">
-          <h4 className="font-bold">signing in ....</h4>
-          <p>user successfully signed in</p>
-        </div> */}
-      {/* </div> */}
     </div>
   );
 };
 
 export default LogIn;
-
 
 // 'use client';
 // import { useState } from 'react';
@@ -152,10 +134,10 @@ export default LogIn;
 //         username,
 //         password,
 //       });
-      
+
 //       // Store the access token in localStorage
 //       localStorage.setItem('access_token', response.data.access_token);
-      
+
 //       router.push('/home'); // Navigate to the homepage on successful login
 //     } catch (err) {
 //       console.error('Error during login:', err);
