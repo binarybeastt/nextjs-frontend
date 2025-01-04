@@ -27,7 +27,7 @@ const LogIn = () => {
         // Store the access token in localStorage
         localStorage.setItem("access_token", response.data.access_token);
         // setIsShowModal(true);
-        console.log("Login successful:", response.data);
+        // console.log("Login successful:", response.data);
         router.push("/home"); // Navigate to the homepage on successful login
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {

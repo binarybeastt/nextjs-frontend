@@ -1,7 +1,8 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { FaRegEye } from "react-icons/fa";
 
 interface SignInProps {
   handleLogIn: () => Promise<void>;
@@ -12,7 +13,6 @@ interface SignInProps {
   username: string;
   setUsername: Dispatch<SetStateAction<string>>;
 }
-
 const LogIn: React.FC<SignInProps> = ({
   handleLogIn,
   loading,
@@ -22,9 +22,14 @@ const LogIn: React.FC<SignInProps> = ({
   setPassword,
   setUsername,
 }) => {
+  const [showPassword, setIsShowPassword] = useState(false);
+
   const handleLoginButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     handleLogIn();
+  };
+  const handleEyeToggle = () => {
+    setIsShowPassword(!showPassword);
   };
   return (
     <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border relative">
@@ -50,46 +55,32 @@ const LogIn: React.FC<SignInProps> = ({
               className="border py-2 rounded-[10px] px-2"
             />
           </div>
-          {/* <div className="flex flex-col gap-y-2">
-            <label htmlFor="" className="text-[#8392A7]">
-              Email*
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@gmail.com"
-              className={`border ${
-                error ? "border-red-600" : "border"
-              }  py-2 rounded-[10px] px-2`}
-            />
-            {error && (
-              <p style={{ color: "red" }}>please enter valid email address</p>
-            )}
-          </div> */}
+    
           <div className="flex flex-col gap-y-2">
             <label htmlFor="" className="text-[#8392A7]">
               Password*
             </label>
-            <input
-              type="text"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="************"
+            <div
               className={`border ${
                 error ? "border-red-600" : "border"
-              } py-2 rounded-[10px] px-2`}
-            />
+              } py-2 rounded-[10px] px-2 flex items-center`}
+            >
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="*******"
+                className="outline-none"
+              />
+              <FaRegEye onClick={handleEyeToggle} />
+            </div>
             {error && (
               <p style={{ color: "red" }}>
                 password must be at least 6 characters
               </p>
             )}
           </div>
-          {/* <div className="flex flex-col gap-y-2">
-            <label htmlFor="">Confirm Password*</label>
-            <input type="text"  placeholder="*******" className="border py-2 rounded-[10px] px-2"/>
-          </div> */}
+        
           {error && <p className="text-red-600">{error}</p>}
         </form>
         <button
@@ -116,4 +107,3 @@ const LogIn: React.FC<SignInProps> = ({
 };
 
 export default LogIn;
-

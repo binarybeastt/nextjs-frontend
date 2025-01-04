@@ -24,6 +24,8 @@ const Screen1 = () => {
         resume,
       });
       setQuestionsAnswers(response.data.questions_answers);
+      console.log(response.data.questions_answers);
+      
     } catch (err) {
       console.error('Error during interview preparation:', err);
       setError('Failed to generate interview preparation data.');
