@@ -18,6 +18,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setIsShowPassword] = useState(false);
+  const[touched, setTouched] = useState(false)
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -36,6 +37,7 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
+    setTouched(true)
     setLoading(true);
     setError("");
     try {
@@ -122,13 +124,13 @@ export default function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="********"
-                  className="outline-none "
+                  className="outline-none"
                 />
                 <FaRegEye onClick={handleEyeToggle}  />
               </div>
-              {/* {username &&  username.length < 3 ?
-               (<p className="text-red-900">password is trash</p>) : (<p>we good</p>)
-              } */}
+              {password.length <= 3 ?
+               (<p className="text-red-900">password must be more than 3 characters</p>) : (<p></p>)
+              }
               {error && (
                 <p style={{ color: "red" }}>
                   password must be at least 6 characters
@@ -149,6 +151,9 @@ export default function Register() {
               />`
                <FaRegEye onClick={handleEyeToggle} />
               </div>
+              {confirmPassword.length <= 3 ?
+               (<p className="text-red-900">password must be more than 3 characters</p>) : (<p></p>)
+              }
               {error && 
               <p style={{color: "red"}}>password does not match</p>
               }
