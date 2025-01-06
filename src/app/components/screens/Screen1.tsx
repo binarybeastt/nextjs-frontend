@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RxDownload } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosInstance from "@/app/utils/axiosInstance";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 // proficient in react and typescript with 2-3 years of experience
 
@@ -15,7 +15,7 @@ const Screen1 = () => {
   const [questionsAnswers, setQuestionsAnswers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
+  // const router = useRouter();
 
   // interface InterviewPrep{
   //   job_title:string,

@@ -18,7 +18,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setIsShowPassword] = useState(false);
-  const[touched, setTouched] = useState(false)
+  // const[touched, setTouched] = useState(false)
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
