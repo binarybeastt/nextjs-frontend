@@ -37,7 +37,7 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
-    setTouched(true)
+    // setTouched(true)
     setLoading(true);
     setError("");
     try {

@@ -24,6 +24,15 @@ const Log = () => {
     }
   }, [showModal, loading]);
 
+  // hashed token process copied from chat, dont know how it works
+  const hashToken = async (token:string) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(token);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+  };
+
   const handleLogIn = async () => {
     setLoading(true);
     setError("");
@@ -32,11 +41,13 @@ const Log = () => {
         username,
         password,
       });
+      // hashing the token before storing it locally
+      const hashedToken = await hashToken(response.data.access_token)
       // Store the access token in localStorage
-      localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("access_token", hashedToken);
       setIsShowModal(true);
       // console.log("Login successful:", response.data);
-      router.push("/home"); // Navigate to the homepage on successful login
+      router.push("/home"); 
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         // Axios-specific error
