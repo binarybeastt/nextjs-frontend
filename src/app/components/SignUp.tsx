@@ -18,7 +18,9 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setIsShowPassword] = useState(false);
-  // const[touched, setTouched] = useState(false)
+  const[touched, setTouched] = useState(false)
+  // const[usernameErr, setUsernameErr] = useState('')
+  // const[passwordErr, setPasswordErr] = useState('')
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -35,6 +37,17 @@ export default function Register() {
   const handleEyeToggle = () => {
     setIsShowPassword(!showPassword);
   };
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    const value = e.target.value
+    setPassword(value)
+    setTouched(true)
+    setError(
+      value.length > 0 && value.length <= 3
+        ? "Password must be at least 6 characters" // String error message
+        : ""
+    );
+  }
 
   const handleRegister = async () => {
     // setTouched(true)
@@ -91,7 +104,7 @@ export default function Register() {
                   error ? "border-red-600" : "border"
                 }  py-2 rounded-[10px] px-2`}
               />
-              {error && <p style={{ color: "red" }}>please enter valid Name</p>}
+              {error && <p style={{ color: "red" }}>please enter valid name</p>}
             </div>
             <div className="flex flex-col gap-y-2">
               <label htmlFor="" className="text-[#8392A7]">
@@ -122,16 +135,16 @@ export default function Register() {
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePassword}
                   placeholder="********"
                   className="outline-none"
                 />
                 <FaRegEye onClick={handleEyeToggle}  />
               </div>
-              {password.length <= 3 ?
-               (<p className="text-red-900">password must be more than 3 characters</p>) : (<p></p>)
-              }
-              {error && (
+              {/* {password.length <= 3 ?
+               (<p style={{ color: "red" }} >password must be more than 3 characters</p>) : (<p></p>)
+              } */}
+              {error && touched && (
                 <p style={{ color: "red" }}>
                   password must be at least 6 characters
                 </p>
@@ -151,9 +164,9 @@ export default function Register() {
               />`
                <FaRegEye onClick={handleEyeToggle} />
               </div>
-              {confirmPassword.length <= 3 ?
+              {/* {confirmPassword.length <= 3 ?
                (<p className="text-red-900">password must be more than 3 characters</p>) : (<p></p>)
-              }
+              } */}
               {error && 
               <p style={{color: "red"}}>password does not match</p>
               }
