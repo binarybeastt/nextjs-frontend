@@ -26,7 +26,7 @@ const Screen1 = () => {
   //
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("clicked");
+    // console.log("clicked");
     setLoading(true);
     try {
       const response = await axiosInstance.post("/interview-prep", {
@@ -35,12 +35,12 @@ const Screen1 = () => {
         interview_date: interviewDate,
         resume: resume,
       });
-      // console.log(response);
+      console.log(response);
       setQuestionsAnswers(response.data.questions_answers_value);
       console.log(setQuestionsAnswers(response.data.questions_answers_value));
 
       setLoading(false);
-      console.log(questionsAnswers);
+      // console.log(questionsAnswers);
     } catch (err) {
       console.error("Error during interview preparation:", err);
       setError("Failed to generate interview preparation data.");
