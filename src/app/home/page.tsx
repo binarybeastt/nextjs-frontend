@@ -19,11 +19,9 @@ const Home = () => {
   >("screen1");
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
-  const handleHamburgerMenu = () => {
-    setOpenMenu(!openMenu);
-    // setOpenMenu((prevState) => !prevState); // Toggle the state
-    console.log("clicked");
-  };
+  // const handleHamburgerMenu = () => {
+  //   setOpenMenu(!openMenu);
+  // };
   const handleScreenChange = (
     screen: "screen1" | "screen2" | "screen3" | "screen4"
   ): void => {
@@ -54,7 +52,7 @@ const Home = () => {
           </p>
           <GiHamburgerMenu
             className="sm:hidden text-[30px] cursor-pointer"
-            onClick={handleHamburgerMenu}
+            onClick={()=> setOpenMenu(!openMenu)}
           />
           <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold" onClick={handleLogOut} >logout</button>
         </div>

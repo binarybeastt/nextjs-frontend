@@ -1,48 +1,36 @@
 "use client";
-import React from "react"
-import { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import axiosInstance from '../utils/axiosInstance';
-import { useRouter } from "next/navigation";
+import { FaRegEye } from "react-icons/fa";
 
-const LogIn = () => {
-  const router = useRouter();
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false)
+interface SignInProps {
+  handleLogIn: () => Promise<void>;
+  loading: boolean;
+  error: string;
+  password: string;
+  setPassword: Dispatch<SetStateAction<string>>;
+  username: string;
+  setUsername: Dispatch<SetStateAction<string>>;
+}
+const LogIn: React.FC<SignInProps> = ({
+  handleLogIn,
+  loading,
+  error,
+  username,
+  password,
+  setPassword,
+  setUsername,
+}) => {
+  const [showPassword, setIsShowPassword] = useState(false);
 
-  const handleLoginButton = (e:React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    handleLogin()
-  }
-
-
-  const handleLogin = async () => {
-    setLoading(true)
-    setError("")
-        try {
-          const response = await axiosInstance.post('/auth/login', {
-            username,
-            password,
-          });
-          // Store the access token in localStorage
-          localStorage.setItem('access_token', response.data.access_token);
-          router.push('/home'); // Navigate to the homepage on successful login
-          console.log('Login successful:', response.data);
-          
-        } catch (err) {
-          console.error('Error during login:', err);
-          setError('Login failed. Please check your credentials.');
-          // setUsername('')
-          // setPassword('')
-        }
-        finally{
-          setLoading(false)
-        }
-      };
-      
+  const handleLoginButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleLogIn();
+  };
+  const handleEyeToggle = () => {
+    setIsShowPassword(!showPassword);
+  };
   return (
     <div className="px-4 py-4 sm:px-0 sm:py-0 bg-white rounded-[10px] sm:border relative">
       <div className="sm:mx-10 w-[100%] sm:w-[80%]">
@@ -59,49 +47,41 @@ const LogIn = () => {
         <form action="" className="flex flex-col gap-y-5 mt-5">
           <div className="flex flex-col gap-y-2">
             <label htmlFor="">Full Name*</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}  placeholder="Deji Olawuni" className="border py-2 rounded-[10px] px-2"/>
-          </div>
-          {/* <div className="flex flex-col gap-y-2">
-            <label htmlFor="" className="text-[#8392A7]">
-              Email*
-            </label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@gmail.com"
-              className={`border ${
-                error ? "border-red-600" : "border"
-              }  py-2 rounded-[10px] px-2`}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Deji Olawuni"
+              className="border py-2 rounded-[10px] px-2"
             />
-            {error && (
-              <p style={{ color: "red" }}>please enter valid email address</p>
-            )}
-          </div> */}
+          </div>
+    
           <div className="flex flex-col gap-y-2">
             <label htmlFor="" className="text-[#8392A7]">
               Password*
             </label>
-            <input
-              type="text"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="************"
+            <div
               className={`border ${
                 error ? "border-red-600" : "border"
-              } py-2 rounded-[10px] px-2`}
-            />
+              } py-2 rounded-[10px] px-2 flex items-center`}
+            >
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="*******"
+                className="outline-none"
+              />
+              <FaRegEye onClick={handleEyeToggle} />
+            </div>
             {error && (
               <p style={{ color: "red" }}>
                 password must be at least 6 characters
               </p>
             )}
           </div>
-          {/* <div className="flex flex-col gap-y-2">
-            <label htmlFor="">Confirm Password*</label>
-            <input type="text"  placeholder="*******" className="border py-2 rounded-[10px] px-2"/>
-          </div> */}
-           {error && <p className="text-red-600">{error}</p>}
+        
+          {error && <p className="text-red-600">{error}</p>}
         </form>
         <button
           type="submit"
@@ -122,71 +102,8 @@ const LogIn = () => {
           <p className="text-[#8392A7]">if you dont have an account</p>
         </div>
       </div>
-      {/* <div className=" sm:h-[120px] sm:mt-[300px] bg-red-90 hidde"> */}
-        {/* <div className="bg-white border-2  px-2 py-5 rounded-[10px] h-fit absolute right-[0px] top- bottom-[0px] space-y-2">
-          <h4 className="font-bold">signing in ....</h4>
-          <p>user successfully signed in</p>
-        </div> */}
-      {/* </div> */}
     </div>
   );
 };
 
 export default LogIn;
-
-
-// 'use client';
-// import { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-// import axiosInstance from '../utils/axiosInstance';
-
-// export default function Login() {
-//   const router = useRouter();
-//   const [username, setUsername] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-
-//   const handleLogin = async () => {
-//     try {
-//       const response = await axiosInstance.post('/auth/login', {
-//         username,
-//         password,
-//       });
-      
-//       // Store the access token in localStorage
-//       localStorage.setItem('access_token', response.data.access_token);
-      
-//       router.push('/home'); // Navigate to the homepage on successful login
-//     } catch (err) {
-//       console.error('Error during login:', err);
-//       setError('Login failed. Please check your credentials.');
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Login</h1>
-//       {error && <p>{error}</p>}
-//       <form
-//         onSubmit={(e) => {
-//           e.preventDefault();
-//           handleLogin();
-//         }}
-//       >
-//         <input
-//           type="text"
-//           placeholder="Username"
-//           value={username}
-//           onChange={(e) => setUsername(e.target.value)}
-//         />
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//         <button type="submit">Login</button>
-//       </form>
-//     </div>
-//   );
-// }

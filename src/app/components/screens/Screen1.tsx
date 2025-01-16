@@ -2,31 +2,51 @@ import React, { useState } from "react";
 import { RxDownload } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosInstance from "@/app/utils/axiosInstance";
+// import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+// proficient in react and typescript with 2-3 years of experience
 
 const Screen1 = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [jobTitle, setJobTitle] = useState('');
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobTitle, setJobTitle] = useState<string>("");
+  const [jobDescription, setJobDescription] = useState<string>("");
   const [interviewDate, setInterviewDate] = useState<string | null>(null);
-  const [resume, setResume] = useState('');
+  const [resume, setResume] = useState<string>("");
   const [questionsAnswers, setQuestionsAnswers] = useState(null);
-  const [error, setError] = useState('');
-  // const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  // const router = useRouter();
 
-// 
+  // interface InterviewPrep{
+  //   job_title:string,
+  //   job_description: string,
+  //   interview_date: Date
+  // }
+
+  //
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
+    // console.log("clicked");
+    setLoading(true);
     try {
-      const response = await axiosInstance.post('/interview-prep', {
+      const response = await axiosInstance.post("/interview-prep", {
         job_title: jobTitle,
         job_description: jobDescription,
         interview_date: interviewDate,
-        resume,
+        resume: resume,
       });
-      setQuestionsAnswers(response.data.questions_answers);
+      console.log(response);
+      setQuestionsAnswers(response.data.questions_answers_value);
+      console.log(setQuestionsAnswers(response.data.questions_answers_value));
+
+      setLoading(false);
+      // console.log(questionsAnswers);
     } catch (err) {
-      console.error('Error during interview preparation:', err);
-      setError('Failed to generate interview preparation data.');
+      console.error("Error during interview preparation:", err);
+      setError("Failed to generate interview preparation data.");
+      // router.push("/Login")
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,7 +92,9 @@ const Screen1 = () => {
           className="flex flex-col gap-y-3  sm:border-2 p-1 sm:p-5 rounded-[10px] w-[100%] "
           onSubmit={handleFile}
         >
-          <p className="sm:text-[25px] text-[20px] font-bold">New Interview Prep</p>
+          <p className="sm:text-[25px] text-[20px] font-bold">
+            New Interview Prep
+          </p>
           <div className=" border sm:hidden w-auto"></div>
           <div className="flex flex-col gap-y-2 mt-2">
             <label htmlFor="">Job Title</label>
@@ -86,11 +108,7 @@ const Screen1 = () => {
                 error ? "border-red-600" : "border"
               } text-[18px] py-2 px-3 rounded-[10px] w-[100%] `}
             />
-            {error && (
-              <p style={{ color: "red" }}>
-                please input field
-              </p>
-            )}
+            {error && <p style={{ color: "red" }}>please input field</p>}
           </div>
           <div className="flex flex-col gap-y-2">
             <label htmlFor="">Job Description</label>
@@ -105,17 +123,13 @@ const Screen1 = () => {
               } text-[18px] py-2 px-3 rounded-[10px] sm:h-[200px]`}
               required
             ></textarea>
-             {error && (
-              <p style={{ color: "red" }}>
-                please input field
-              </p>
-            )}
+            {error && <p style={{ color: "red" }}>please input field</p>}
           </div>
           <div className="flex flex-col gap-y-2">
             <label htmlFor="">Interview Date</label>
             <input
               type="date"
-              value={interviewDate || ''}
+              value={interviewDate || ""}
               onChange={(e) => setInterviewDate(e.target.value)}
               className="border py-2 px-3 rounded-[10px] w-[100%]"
               required
@@ -160,15 +174,30 @@ const Screen1 = () => {
               ></textarea>
             </div>
           </div>
-          <button className="capitalize bg-[#3056D3] text-white rounded-[10px] p-3" onClick={handleSubmit}>generate prep</button>
+          <button
+            className="capitalize bg-[#3056D3] text-white rounded-[10px] p-3"
+            onClick={handleSubmit}
+          >
+            {loading ? "generating prep...." : "generate prep"}
+          </button>
         </form>
         {/* ressume answer */}
         {questionsAnswers && (
-        <div className="mt-8">
-          <h2>Interview Questions and Answers</h2>
-          <p className="bg-gray-100 p-4 rounded w-[60%]">{JSON.stringify(questionsAnswers, null, 2)}</p>
-        </div>
-      )}
+          <div className="mt-8">
+            <h2 className="text-[20px] font-semibold ml-5">
+              Interview Questions and Answers
+            </h2>
+            <ReactMarkdown
+              className={"bg-gray-100 p-4  w-[100%] mt-3 rounded-[10px]"}
+            >
+              {questionsAnswers}
+            </ReactMarkdown>
+
+            {/* <p className="bg-gray-100 p-4 rounded w-[60%]">
+              {JSON.stringify(questionsAnswers, null, 2)}
+            </p> */}
+          </div>
+        )}
       </div>
     </>
   );

@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://fast-backend-n.onrender.com', // Set this to your FastAPI backend URL
+  baseURL: 'https://career-cop.azurewebsites.net/interview-prep/', // Set this to your FastAPI backend URL
 });
 
 export const registerUser = async (username: string, email: string, password: string) => {

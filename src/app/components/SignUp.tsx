@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../utils/axiosInstance";
 import { FcGoogle } from "react-icons/fc";
+import { FaRegEye } from "react-icons/fa";
+// import { IoMdEyeOff } from "react-icons/io";
 import Link from "next/link";
 
 export default function Register() {
@@ -12,33 +14,60 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setIsConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setIsShowPassword] = useState(false);
+  const[touched, setTouched] = useState(false)
+  // const[usernameErr, setUsernameErr] = useState('')
+  // const[passwordErr, setPasswordErr] = useState('')
 
-  const handleSubmit = (e:React.MouseEvent<HTMLButtonElement> ) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    handleRegister();
+    if(password === confirmPassword){
+      console.log('password match')
+      setError('')
+      handleRegister();
+    }
+    else{
+      console.log('password error');
+      setError('password does not match')
+    }
+  };
+  const handleEyeToggle = () => {
+    setIsShowPassword(!showPassword);
   };
 
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    const value = e.target.value
+    setPassword(value)
+    setTouched(true)
+    setError(
+      value.length > 0 && value.length <= 3
+        ? "Password must be at least 6 characters" // String error message
+        : ""
+    );
+  }
+
   const handleRegister = async () => {
-    setLoading(true)
-    setError("")
+    // setTouched(true)
+    setLoading(true);
+    setError("");
     try {
       const response = await axiosInstance.post("/auth/register", {
         username,
         email,
         password,
       });
-      console.log("Registration successful:", response.data);
-      if(response) {
-          router.push("/login");
+      // console.log("Registration successful:", response.data);
+      if (response) {
+        router.push("/login");
       }
     } catch (err) {
       console.error("Error during registration:", err);
       setError("Registration failed. Please try again.");
-    }
-    finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -63,22 +92,23 @@ export default function Register() {
             // }}
           >
             <div className="flex flex-col gap-y-2">
-            <label htmlFor="" className="text-[#8392A7]">Full Name*</label>
-            <input 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)}  
-            placeholder="Deji Olawuni" 
-            className={`border ${
-                error ? "border-red-600" : "border"
-              }  py-2 rounded-[10px] px-2`}/>
-                {error && (
-                <p style={{ color: "red" }}>please enter valid Name</p>
-              )}
-          </div>
+              <label htmlFor="" className="text-[#8392A7]">
+                Full Name <span className="text-red-700">*</span>
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Deji Olawuni"
+                className={`border ${
+                  error ? "border-red-600" : "border"
+                }  py-2 rounded-[10px] px-2`}
+              />
+              {error && <p style={{ color: "red" }}>please enter valid name</p>}
+            </div>
             <div className="flex flex-col gap-y-2">
               <label htmlFor="" className="text-[#8392A7]">
-                Email*
+                Email <span className="text-red-700">*</span>
               </label>
               <input
                 type="email"
@@ -95,27 +125,52 @@ export default function Register() {
             </div>
             <div className="flex flex-col gap-y-2">
               <label htmlFor="" className="text-[#8392A7]">
-                Password*
+                Password <span className="text-red-700">*</span>
               </label>
-              <input
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="************"
+              <div
                 className={`border ${
                   error ? "border-red-600" : "border"
-                } py-2 rounded-[10px] px-2 outline-none`}
-              />
-              {error && (
+                } py-2 rounded-[10px] px-2 outline-none flex items-center`}
+              >
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={handlePassword}
+                  placeholder="********"
+                  className="outline-none"
+                />
+                <FaRegEye onClick={handleEyeToggle}  />
+              </div>
+              {/* {password.length <= 3 ?
+               (<p style={{ color: "red" }} >password must be more than 3 characters</p>) : (<p></p>)
+              } */}
+              {error && touched && (
                 <p style={{ color: "red" }}>
                   password must be at least 6 characters
                 </p>
               )}
             </div>
-            {/* <div className="flex flex-col gap-y-2">
-            <label htmlFor="">Confirm Password*</label>
-            <input type="text"  placeholder="*******" className="border py-2 rounded-[10px] px-2"/>
-          </div> */}
+            <div className="flex flex-col gap-y-2">
+              <label htmlFor="" className="text-[#8392A7]">Confirm Password <span className="text-red-700">*</span></label>
+              <div  className={`border ${
+                  error ? "border-red-600" : "border"
+                } py-2 rounded-[10px] px-2 outline-none flex items-center`}>
+             ` <input
+                type={showPassword? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e)=> setIsConfirmPassword(e.target.value)}
+                placeholder="*******"
+                className="outline-none"
+              />`
+               <FaRegEye onClick={handleEyeToggle} />
+              </div>
+              {/* {confirmPassword.length <= 3 ?
+               (<p className="text-red-900">password must be more than 3 characters</p>) : (<p></p>)
+              } */}
+              {error && 
+              <p style={{color: "red"}}>password does not match</p>
+              }
+            </div>
           </form>
           <button
             type="submit"
