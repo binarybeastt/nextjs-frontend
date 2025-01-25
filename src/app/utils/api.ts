@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://career-cop.azurewebsites.net', // Set this to your FastAPI backend URL
+  baseURL: 'https://fast-backend-n.onrender.com', // Set this to your FastAPI backend URL
 });
 
 export const registerUser = async (username: string, email: string, password: string) => {
