@@ -1,165 +1,145 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaUserGroup, FaLinkedin } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { FaUserGroup, FaLinkedin } from "react-icons/fa6";
 import { CiChat1 } from "react-icons/ci";
 import { BsFileEarmarkText } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useRouter } from "next/navigation";
 import Screen1 from "@/app/components/screens/Screen1";
 import Screen2 from "@/app/components/screens/Screen2";
 import Screen3 from "@/app/components/screens/Screen3";
 import Screen4 from "@/app/components/screens/Screen4";
 
-// Enum for screen types to avoid magic strings
-enum Screen {
-  Screen1 = "screen1",
-  Screen2 = "screen2",
-  Screen3 = "screen3",
-  Screen4 = "screen4",
+type ScreenType = "screen1" | "screen2" | "screen3" | "screen4";
+
+interface MenuItem {
+  id: ScreenType;
+  label: string;
+  icon: JSX.Element;
+  component: JSX.Element;
 }
 
 const Home = () => {
-  const [currentPage, setCurrentPage] = useState<Screen>(Screen.Screen1);
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<ScreenType>("screen1");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
-  // Check if the user is logged in (client-side only)
+  const menuItems: MenuItem[] = [
+    {
+      id: "screen1",
+      label: "Interview Prep",
+      icon: <FaUserGroup className="text-gray-600" />,
+      component: <Screen1 />
+    },
+    {
+      id: "screen2",
+      label: "LinkedIn Profile Review",
+      icon: <FaLinkedin className="text-gray-600" />,
+      component: <Screen2 />
+    },
+    {
+      id: "screen3",
+      label: "CV/Resume Review",
+      icon: <BsFileEarmarkText className="text-gray-600" />,
+      component: <Screen3 />
+    },
+    {
+      id: "screen4",
+      label: "Career Advisor Chat",
+      icon: <CiChat1 className="text-gray-600" />,
+      component: <Screen4 />
+    }
+  ];
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    try {
       const token = localStorage.getItem("access_token");
       if (!token) {
         router.push("/login");
       }
+    } catch (error) {
+      console.error("Error checking authentication:", error);
+      router.push("/login");
     }
   }, [router]);
 
-  // Handle screen change and toggle menu
-  const handleScreenChange = (screen: Screen): void => {
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("access_token");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  const handleScreenChange = (screen: ScreenType) => {
     setCurrentPage(screen);
-    setOpenMenu(false); // Close the menu after selection
+    setIsMobileMenuOpen(false);
   };
 
-  // Handle logout
-  const handleLogOut = () => {
-    localStorage.removeItem("access_token");
-    router.push("/");
-  };
-
-  // Menu items data for reusability
-  const menuItems = [
-    {
-      icon: <FaUserGroup />,
-      label: "Interview Prep",
-      screen: Screen.Screen1,
-    },
-    {
-      icon: <FaLinkedin />,
-      label: "LinkedIn Profile Review",
-      screen: Screen.Screen2,
-    },
-    {
-      icon: <BsFileEarmarkText />,
-      label: "CV/Resume Review",
-      screen: Screen.Screen3,
-    },
-    {
-      icon: <CiChat1 />,
-      label: "Career Advisor Chat",
-      screen: Screen.Screen4,
-    },
-  ];
+  const MenuContent = ({ isMobile = false }: { isMobile?: boolean }) => (
+    <div className={`
+      border rounded-lg bg-white
+      ${isMobile ? 'w-full absolute top-20 z-50' : 'w-[300px] mx-20 h-[250px]'}
+    `}>
+      <p className="hidden sm:flex px-4 py-4">Choose a service below</p>
+      <div className="hidden sm:flex border-b" />
+      <div className="flex flex-col px-5 gap-y-5 py-3">
+        {menuItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleScreenChange(item.id)}
+            className={`
+              flex items-center gap-x-5 hover:bg-gray-50 p-2 rounded
+              ${currentPage === item.id ? 'font-serif' : 'font-normal'}
+            `}
+          >
+            {item.icon}
+            <span className="capitalize">{item.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <>
+    <div className="px-4 py-4 sm:px-0 sm:py-0">
       {/* Header */}
-      <div className="px-4 py-4 sm:px-0 sm:py-0">
-        <div className="flex border-2 items-center sm:bg-white sm:border sm:w-[90%] sm:mt-20 sm:mx-auto sm:py-1 rounded-[10px] justify-between px-5">
-          <p className="font-bold text-[30px] capitalize">
-            deji___ <br />
-            school
-          </p>
-          {/* Hamburger Menu (Mobile Only) */}
-          <GiHamburgerMenu
-            className="sm:hidden text-[30px] cursor-pointer"
-            onClick={() => setOpenMenu(!openMenu)}
-            aria-label="Toggle menu"
-          />
-          {/* Logout Button (Desktop Only) */}
+      <header className="flex items-center justify-between px-5 py-2 sm:w-[90%] sm:mx-auto sm:mt-20 border-2 rounded-lg bg-white">
+        <h1 className="font-bold text-3xl capitalize">
+          deji___<br />school
+        </h1>
+        <div className="flex items-center gap-4">
           <button
-            className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold"
-            onClick={handleLogOut}
+            onClick={handleLogout}
+            className="hidden sm:flex bg-slate-900 text-white rounded px-4 py-2 font-bold hover:bg-slate-800"
           >
             Logout
           </button>
+          <GiHamburgerMenu
+            className="text-3xl cursor-pointer sm:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="flex sm:flex-row flex-col gap-x-2 relative sm:absolute pb-10">
+      <main className="flex sm:flex-row flex-col gap-x-2 relative sm:relative pb-10">
         {/* Mobile Menu */}
-        {openMenu && (
-          <div className="sm:w-[40%] w-[100%] sm:hidden absolute top-[-80px] sm:top-0">
-            <div className="border mt-20 rounded-[10px] pb-3 sm:w-[300px] sm:mx-20 bg-white">
-              <p className="mx-4 hidden sm:flex py-4">Choose a service below</p>
-              <div className="border hidden sm:flex"></div>
-              <div className="flex flex-col px-5 gap-y-5 mt-2 py-3">
-                {menuItems.map((item) => (
-                  <div
-                    key={item.screen}
-                    className="flex items-center gap-x-5 cursor-pointer"
-                    onClick={() => handleScreenChange(item.screen)}
-                  >
-                    {item.icon}
-                    <p
-                      className={`capitalize ${
-                        currentPage === item.screen ? "font-serif" : "font-normal"
-                      }`}
-                    >
-                      {item.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
+        {isMobileMenuOpen && <MenuContent isMobile />}
+        
         {/* Desktop Menu */}
         <div className="hidden sm:flex mt-10">
-          <div className="border mt-20 sm:mt-0 rounded-[10px] pb-3 sm:w-[300px] sm:mx-20 bg-white sm:h-[250px]">
-            <p className="mx-4 hidden sm:flex py-4">Choose a service below</p>
-            <div className="border hidden sm:flex"></div>
-            <div className="flex flex-col px-5 gap-y-5 mt-2 py-3">
-              {menuItems.map((item) => (
-                <div
-                  key={item.screen}
-                  className="flex items-center gap-x-5 cursor-pointer"
-                  onClick={() => handleScreenChange(item.screen)}
-                >
-                  {item.icon}
-                  <p
-                    className={`capitalize ${
-                      currentPage === item.screen ? "font-serif" : "font-normal"
-                    }`}
-                  >
-                    {item.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <MenuContent />
         </div>
 
-        {/* Screen Content */}
-        <div className="flex-1">
-          {currentPage === Screen.Screen1 && <Screen1 />}
-          {currentPage === Screen.Screen2 && <Screen2 />}
-          {currentPage === Screen.Screen3 && <Screen3 />}
-          {currentPage === Screen.Screen4 && <Screen4 />}
+        {/* Content Area */}
+        <div className="sm:flex-1 sm:mt-10">
+          {menuItems.find(item => item.id === currentPage)?.component}
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 };
 
