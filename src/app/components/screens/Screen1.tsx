@@ -3,6 +3,7 @@ import { RxDownload } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosInstance from "@/app/utils/axiosInstance";
 import ReactMarkdown from "react-markdown";
+import { AxiosError } from "axios";
 
 interface InterviewPrepData {
   job_title: string;
@@ -13,6 +14,11 @@ interface InterviewPrepData {
 
 interface InterviewResponse {
   questions_answers_value: string;
+}
+
+interface ApiError {
+  detail?: string;
+  message?: string;
 }
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB
@@ -54,7 +60,7 @@ const Screen1 = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.MouseEvent) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     
     if (!validateForm()) return;
@@ -70,18 +76,20 @@ const Screen1 = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          timeout: 30000 // 30 second timeout
+          timeout: 30000
         }
       );
       
       setQuestionsAnswers(response.data.questions_answers_value);
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 
+    } catch (err) {
+      const error = err as AxiosError<ApiError>;
+      const errorMessage = error.response?.data?.detail || 
+                          error.response?.data?.message ||
                           "Failed to generate interview preparation data.";
+      
       setError({ submit: errorMessage });
       
-      if (err.response?.status === 401) {
-        // Handle unauthorized error - could redirect to login
+      if (error.response?.status === 401) {
         console.error("Authentication error - token may have expired");
       }
     } finally {
@@ -122,7 +130,6 @@ const Screen1 = () => {
         <h2 className="sm:text-2xl text-xl font-bold">New Interview Prep</h2>
         <hr className="sm:hidden" />
 
-        {/* Input Fields */}
         <div className="space-y-4">
           <div className="flex flex-col gap-y-2">
             <label htmlFor="job_title">Job Title</label>
@@ -169,7 +176,6 @@ const Screen1 = () => {
             />
           </div>
 
-          {/* File Upload */}
           <div className="border border-dashed border-blue-600 mt-5 rounded-lg 
                         sm:h-64 bg-blue-50 p-4">
             <div className="flex flex-col items-center justify-center h-full space-y-4">
@@ -204,7 +210,6 @@ const Screen1 = () => {
             </div>
           </div>
 
-          {/* Resume Text Area */}
           <div className="space-y-2">
             <p>Or paste CV/Resume Text</p>
             <div className="relative mt-3">
@@ -238,7 +243,6 @@ const Screen1 = () => {
         </button>
       </form>
 
-      {/* Results Section */}
       {questionsAnswers && (
         <div className="mt-8 space-y-4">
           <h2 className="text-xl font-semibold ml-5">
