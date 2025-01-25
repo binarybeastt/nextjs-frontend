@@ -2,204 +2,254 @@ import React, { useState } from "react";
 import { RxDownload } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosInstance from "@/app/utils/axiosInstance";
-// import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 
+interface InterviewPrepData {
+  job_title: string;
+  job_description: string;
+  interview_date: string | null;
+  resume: string;
+}
+
+interface InterviewResponse {
+  questions_answers_value: string;
+}
+
+const MAX_FILE_SIZE = 1024 * 1024; // 1MB
 
 const Screen1 = () => {
+  const [formData, setFormData] = useState<InterviewPrepData>({
+    job_title: "",
+    job_description: "",
+    interview_date: null,
+    resume: ""
+  });
   const [file, setFile] = useState<File | null>(null);
-  const [jobTitle, setJobTitle] = useState<string>("");
-  const [jobDescription, setJobDescription] = useState<string>("");
-  const [interviewDate, setInterviewDate] = useState<string | null>(null);
-  const [resume, setResume] = useState<string>("");
-  const [questionsAnswers, setQuestionsAnswers] = useState(null);
+  const [questionsAnswers, setQuestionsAnswers] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  // const router = useRouter();
+  const [error, setError] = useState<{[key: string]: string}>({});
 
-  // interface InterviewPrep{
-  //   job_title:string,
-  //   job_description: string,
-  //   interview_date: Date
-  // }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError(prev => ({ ...prev, [name]: "" }));
+  };
 
-  //
+  const validateForm = (): boolean => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!formData.job_title.trim()) {
+      newErrors.job_title = "Job title is required";
+    }
+    if (!formData.job_description.trim()) {
+      newErrors.job_description = "Job description is required";
+    }
+    if (!formData.resume.trim() && !file) {
+      newErrors.resume = "Either resume text or file is required";
+    }
+
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
-    // console.log("clicked");
+    
+    if (!validateForm()) return;
+    
     setLoading(true);
+    setError({});
+    
     try {
-      const response = await axiosInstance.post("/interview-prep", {
-        job_title: jobTitle,
-        job_description: jobDescription,
-        interview_date: interviewDate,
-        resume: resume,
-      });
-      console.log(response);
+      const response = await axiosInstance.post<InterviewResponse>(
+        "/interview-prep/", 
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          timeout: 30000 // 30 second timeout
+        }
+      );
+      
       setQuestionsAnswers(response.data.questions_answers_value);
-      console.log(setQuestionsAnswers(response.data.questions_answers_value));
-
-      setLoading(false);
-      // console.log(questionsAnswers);
-    } catch (err) {
-      console.error("Error during interview preparation:", err);
-      setError("Failed to generate interview preparation data.");
-      // router.push("/login")
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || 
+                          "Failed to generate interview preparation data.";
+      setError({ submit: errorMessage });
+      
+      if (err.response?.status === 401) {
+        // Handle unauthorized error - could redirect to login
+        console.error("Authentication error - token may have expired");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // file uploading
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files?.[0] || null);
-  };
-
-  const handleFile = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (file) {
-      // Only proceed if file is not null
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (response.ok) {
-          console.log("File uploaded successfully");
-        } else {
-          console.error("File upload failed");
-        }
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
+    const selectedFile = e.target.files?.[0];
+    
+    if (!selectedFile) return;
+    
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setError({ file: "File size must be less than 1MB" });
+      return;
     }
+    
+    if (!["application/pdf", "application/msword", 
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+         ].includes(selectedFile.type)) {
+      setError({ file: "Only PDF and DOCX files are allowed" });
+      return;
+    }
+    
+    setFile(selectedFile);
+    setError(prev => ({ ...prev, file: "", resume: "" }));
   };
-  return (
-    <>
-      <div className="border-dashed border-2 rounded-[10px] px-2 space-y-10 py-5 sm:w-[60%] w-[100%] mt-10">
-        <p className="font-bold text-[20px] mx-4">Interview Prep</p>
-        <p className="px-7">
-          Interview Prep helps you get comprehensive access to possible
-          questions and their answers in preparation for your next job
-          interview.
-        </p>
-        <form
-          className="flex flex-col gap-y-3  sm:border-2 p-1 sm:p-5 rounded-[10px] w-[100%] "
-          onSubmit={handleFile}
-        >
-          <p className="sm:text-[25px] text-[20px] font-bold">
-            New Interview Prep
-          </p>
-          <div className=" border sm:hidden w-auto"></div>
-          <div className="flex flex-col gap-y-2 mt-2">
-            <label htmlFor="">Job Title</label>
-            <input
-              name="jobTitle"
-              onChange={(e) => setJobTitle(e.target.value)}
-              value={jobTitle}
-              type="text"
-              placeholder="Enter Job Title"
-              className={`border ${
-                error ? "border-red-600" : "border"
-              } text-[18px] py-2 px-3 rounded-[10px] w-[100%] `}
-            />
-            {error && <p style={{ color: "red" }}>please input field</p>}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="">Job Description</label>
-            <textarea
-              name=""
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              id=""
-              placeholder="Enter Job Description"
-              className={`border ${
-                error ? "border-red-600" : "border"
-              } text-[18px] py-2 px-3 rounded-[10px] sm:h-[200px]`}
-              required
-            ></textarea>
-            {error && <p style={{ color: "red" }}>please input field</p>}
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="">Interview Date</label>
-            <input
-              type="date"
-              value={interviewDate || ""}
-              onChange={(e) => setInterviewDate(e.target.value)}
-              className="border py-2 px-3 rounded-[10px] w-[100%]"
-              required
-            />
-          </div>
-          {/* file uploading */}
-          <div className="border border-dashed border-[#3056D3] mt-5 rounded-[10px] sm:h-[250px] bg-[#F4F7FF]">
-            <div className="border-2 rounded-[50%] mx-auto mt-10 w-[40px] h-[40px] bg-white">
-              <RxDownload className="text-[#3056D3] mx-auto my-2" />
-            </div>
-            <div className="w-[50%] mt-2 mx-auto text-center space-y-5">
-              <input
-                type="file"
-                // value={resume}
-                onChange={handleFileChange}
-                // required
-                className="hidden"
-              />
-              <button type="submit" className="text-[#A0808F]">
-                {" "}
-                <span className="text-[#3056D3]">
-                  click to upload CV/Resume
-                </span>{" "}
-                or drag and drop{" "}
-              </button>
-              <p className="text-[#A0808F]">PDF, DOCX</p>
-              <p className="text-[#A0808F]">(max, 1mb)</p>
-            </div>
-          </div>
-          <div className="">
-            <p>Or paste CV/Resume Text</p>
-            <div className="relative mt-3 mx-1 ">
-              <FaRegPenToSquare className="border-none absolute top-[20px] left-[20px] sm:left-[30px] text-[#A0808F]" />
-              <textarea
-                name=""
-                id=""
-                value={resume}
-                onChange={(e) => setResume(e.target.value)}
-                placeholder="place CV/Resume"
-                className="border outline-none px-12 sm:px-20 py-[15px] rounded-[10px] w-full sm:h-[250px]"
-                required
-              ></textarea>
-            </div>
-          </div>
-          <button
-            className="capitalize bg-[#3056D3] text-white rounded-[10px] p-3"
-            onClick={handleSubmit}
-          >
-            {loading ? "generating prep...." : "generate prep"}
-          </button>
-        </form>
-        {/* ressume answer */}
-        {questionsAnswers && (
-          <div className="mt-8">
-            <h2 className="text-[20px] font-semibold ml-5">
-              Interview Questions and Answers
-            </h2>
-            <ReactMarkdown
-              className={"bg-gray-100 p-4  w-[100%] mt-3 rounded-[10px]"}
-            >
-              {questionsAnswers}
-            </ReactMarkdown>
 
-            {/* <p className="bg-gray-100 p-4 rounded w-[60%]">
-              {JSON.stringify(questionsAnswers, null, 2)}
-            </p> */}
+  return (
+    <div className="border-dashed border-2 rounded-lg px-2 space-y-10 py-5 sm:w-3/5 w-full mt-10">
+      <h1 className="font-bold text-xl mx-4">Interview Prep</h1>
+      <p className="px-7">
+        Interview Prep helps you get comprehensive access to possible questions 
+        and their answers in preparation for your next job interview.
+      </p>
+
+      <form className="flex flex-col gap-y-3 sm:border-2 p-1 sm:p-5 rounded-lg w-full">
+        <h2 className="sm:text-2xl text-xl font-bold">New Interview Prep</h2>
+        <hr className="sm:hidden" />
+
+        {/* Input Fields */}
+        <div className="space-y-4">
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="job_title">Job Title</label>
+            <input
+              id="job_title"
+              name="job_title"
+              type="text"
+              value={formData.job_title}
+              onChange={handleInputChange}
+              placeholder="Enter Job Title"
+              className={`border ${error.job_title ? 'border-red-600' : 'border-gray-300'} 
+                         text-lg py-2 px-3 rounded-lg w-full`}
+            />
+            {error.job_title && (
+              <p className="text-red-600 text-sm">{error.job_title}</p>
+            )}
           </div>
+
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="job_description">Job Description</label>
+            <textarea
+              id="job_description"
+              name="job_description"
+              value={formData.job_description}
+              onChange={handleInputChange}
+              placeholder="Enter Job Description"
+              className={`border ${error.job_description ? 'border-red-600' : 'border-gray-300'} 
+                         text-lg py-2 px-3 rounded-lg sm:h-48`}
+            />
+            {error.job_description && (
+              <p className="text-red-600 text-sm">{error.job_description}</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="interview_date">Interview Date</label>
+            <input
+              id="interview_date"
+              name="interview_date"
+              type="date"
+              value={formData.interview_date || ""}
+              onChange={handleInputChange}
+              className="border border-gray-300 py-2 px-3 rounded-lg w-full"
+            />
+          </div>
+
+          {/* File Upload */}
+          <div className="border border-dashed border-blue-600 mt-5 rounded-lg 
+                        sm:h-64 bg-blue-50 p-4">
+            <div className="flex flex-col items-center justify-center h-full space-y-4">
+              <div className="rounded-full w-10 h-10 bg-white flex items-center justify-center">
+                <RxDownload className="text-blue-600 text-xl" />
+              </div>
+              
+              <div className="text-center space-y-2">
+                <input
+                  type="file"
+                  id="resume-file"
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                />
+                <label
+                  htmlFor="resume-file"
+                  className="text-blue-600 hover:text-blue-700 cursor-pointer"
+                >
+                  Click to upload CV/Resume or drag and drop
+                </label>
+                <p className="text-gray-500 text-sm">PDF, DOCX (max. 1MB)</p>
+                {error.file && (
+                  <p className="text-red-600 text-sm">{error.file}</p>
+                )}
+                {file && (
+                  <p className="text-green-600 text-sm">
+                    Selected: {file.name}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Resume Text Area */}
+          <div className="space-y-2">
+            <p>Or paste CV/Resume Text</p>
+            <div className="relative mt-3">
+              <FaRegPenToSquare className="absolute top-5 left-5 text-gray-500" />
+              <textarea
+                name="resume"
+                value={formData.resume}
+                onChange={handleInputChange}
+                placeholder="Paste CV/Resume"
+                className="border outline-none px-12 sm:px-16 py-4 rounded-lg w-full sm:h-64"
+              />
+              {error.resume && (
+                <p className="text-red-600 text-sm">{error.resume}</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {error.submit && (
+          <p className="text-red-600 text-sm mt-2">{error.submit}</p>
         )}
-      </div>
-    </>
+
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={loading}
+          className={`bg-blue-600 text-white rounded-lg p-3 mt-4
+                     ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+        >
+          {loading ? "Generating prep..." : "Generate prep"}
+        </button>
+      </form>
+
+      {/* Results Section */}
+      {questionsAnswers && (
+        <div className="mt-8 space-y-4">
+          <h2 className="text-xl font-semibold ml-5">
+            Interview Questions and Answers
+          </h2>
+          <ReactMarkdown className="bg-gray-100 p-4 rounded-lg prose max-w-none">
+            {questionsAnswers}
+          </ReactMarkdown>
+        </div>
+      )}
+    </div>
   );
 };
 
