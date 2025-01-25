@@ -34,7 +34,7 @@ const Home = () => {
     // Check if user is logged in by verifying token presence
     const token = localStorage.getItem("access_token");
     if (!token) {
-      router.push("/Login"); // Redirect to login if no token is found
+      router.push("/login"); // Redirect to login if no token is found
     }
   }, [router]);
 
@@ -54,7 +54,7 @@ const Home = () => {
             className="sm:hidden text-[30px] cursor-pointer"
             onClick={()=> setOpenMenu(!openMenu)}
           />
-          <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold" onClick={handleLogOut} >logout</button>
+          <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold" >logout</button>
         </div>
         {/* contsainer div */}
         <div className="flex sm:flex-row flex-col gap-x-2 relative sm:absolute pb-10">
