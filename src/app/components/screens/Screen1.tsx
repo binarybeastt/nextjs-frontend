@@ -4,7 +4,7 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import axiosInstance from "@/app/utils/axiosInstance";
 // import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-// proficient in react and typescript with 2-3 years of experience
+
 
 const Screen1 = () => {
   const [file, setFile] = useState<File | null>(null);
