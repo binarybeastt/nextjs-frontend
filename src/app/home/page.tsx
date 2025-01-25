@@ -54,7 +54,7 @@ const Home = () => {
             className="sm:hidden text-[30px] cursor-pointer"
             onClick={()=> setOpenMenu(!openMenu)}
           />
-          <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold" >logout</button>
+          <button className="hidden sm:flex bg-[#0F172A] text-white rounded-[5px] px-4 py-2 capitalize font-bold"  onClick={handleLogOut}>logout</button>
         </div>
         {/* contsainer div */}
         <div className="flex sm:flex-row flex-col gap-x-2 relative sm:absolute pb-10">
