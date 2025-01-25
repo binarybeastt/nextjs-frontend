@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Html, Head, Main, NextScript } from "next/document";
-import type { Viewport } from 'next'
+// import { Html, Head, Main, NextScript } from "next/document";
+// import type { Viewport } from 'next'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <Head>
+        {/* <Head> */}
         {/* Theme color for light and dark modes */}
         {/* <meta
           name="theme-color"
@@ -41,7 +41,7 @@ export default function RootLayout({
           media="(prefers-color-scheme: dark)"
           content="black"
         /> */}
-      </Head>
+      {/* </Head> */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
@@ -51,27 +51,3 @@ export default function RootLayout({
   );
 }
 
-
-// export default function Document() {
-//   return (
-//     <Html lang="en">
-//       <Head>
-//         {/* Theme color for light and dark modes */}
-//         <meta
-//           name="theme-color"
-//           media="(prefers-color-scheme: light)"
-//           content="cyan"
-//         />
-//         <meta
-//           name="theme-color"
-//           media="(prefers-color-scheme: dark)"
-//           content="black"
-//         />
-//       </Head>
-//       <body>
-//         <Main />
-//         <NextScript />
-//       </body>
-//     </Html>
-//   );
-// }

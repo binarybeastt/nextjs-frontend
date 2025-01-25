@@ -30,17 +30,17 @@ const Home = () => {
   };
 
   const router = useRouter();
-  // useEffect(() => {
-  //   // Check if user is logged in by verifying token presence
-  //   const token = localStorage.getItem("access_token");
-  //   if (!token) {
-  //     router.push("/login"); // Redirect to login if no token is found
-  //   }
-  // }, [router]);
+  useEffect(() => {
+    // Check if user is logged in by verifying token presence
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      router.push("/login"); // Redirect to login if no token is found
+    }
+  }, [router]);
 
-  // const handleLogOut = () => {
-  //   router.push('/');
-  // }
+  const handleLogOut = () => {
+    router.push('/');
+  }
 
   return (
     <>

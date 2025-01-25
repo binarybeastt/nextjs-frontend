@@ -44,7 +44,7 @@ const Screen1 = () => {
     } catch (err) {
       console.error("Error during interview preparation:", err);
       setError("Failed to generate interview preparation data.");
-      // router.push("/Login")
+      // router.push("/login")
     } finally {
       setLoading(false);
     }
