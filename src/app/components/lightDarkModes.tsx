@@ -13,6 +13,7 @@ const lightDarkModes = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+  if (!mounted) return null; 
   // console.log(setTheme);
   console.log("Current Theme:", theme);
   

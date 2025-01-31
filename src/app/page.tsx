@@ -2,7 +2,7 @@
 import Link from "next/link";
 import SignUp from "@/app/components/SignUp";
 import Modal from "@/app/components/Modal";
-import Modes from "@/app/components/lightDarkModes"
+import Modes from "@/app/components/LightDarkModes"
 
 
 // import useState from 'react'
