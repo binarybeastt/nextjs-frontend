@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://career-cop.azurewebsites.net', // Replace with your FastAPI server URL
+  baseURL: 'https://fast-backend-n.onrender.com', // Replace with your FastAPI server URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -15,7 +15,8 @@ axiosInstance.interceptors.request.use(
     // Retrieve the token from localStorage using the correct key
     const token = localStorage.getItem('access_token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
+      console.log('Token being sent:', token);
     }
     return config;
   },
